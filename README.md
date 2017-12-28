@@ -27,7 +27,7 @@ $ pip install -U chaostoolkit-reporting
 
 Notice that this draws a few [dependencies][deps]:
 
-[deps]: https://github.com/chaostoolkit/chaostoolkit-reporting/requirements.txt
+[deps]: https://github.com/chaostoolkit/chaostoolkit-reporting/blob/master/requirements.txt
 
 Some of them are LGPL v3 licensed.
 
