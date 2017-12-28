@@ -1,4 +1,5 @@
 cairosvg
+chaostoolkit-lib
 click
 dateparser
 logzero
