@@ -64,6 +64,7 @@ The experiment was conducted on {{start|pretty_date}} and lasted roughly
 |                       |               |
 | --------------------- | ------------- |
 | **Status**            | {{item.status}} |
+| **Background**        | {{item.activity.get("background", False)}} |
 | **Started**           | {{item.start | pretty_date}} | 
 | **Ended**             | {{item.end | pretty_date}} |
 | **Duration**          | {{pretty_duration(item.start, item.end)}} | {% if item.activity.get("pauses", {}).get("before") %}

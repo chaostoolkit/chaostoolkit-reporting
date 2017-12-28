@@ -22,7 +22,7 @@ from pygal.style import DefaultStyle
 import pypandoc
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -103,30 +103,49 @@ def generate_chart_from_metric_probes(journal: Journal, export_format: str):
         if data:
             result_type = data.get("resultType")
             if result_type == "matrix":
+
+                chart = pygal.Line(
+                    x_label_rotation=20, style=DefaultStyle,
+                    show_minor_x_labels=False, legend_at_bottom=True)
+
+                initialized = False
                 for result in data["result"]:
                     metric = result["metric"]
                     values = result.get("values")
-                    chart = pygal.Line(
-                        x_label_rotation=20, style=DefaultStyle,
-                        show_minor_x_labels=False)
-                    chart.title = metric["__name__"]
 
-                    x = []
+                    # same data for each sequence of values
+                    if not initialized:
+                        initialized = True
+                        chart.title = metric["__name__"]
+
+                        x = []
+                        fromts = datetime.utcfromtimestamp
+                        for value in values:
+                            x.append(
+                                fromts(value[0]).strftime(
+                                    '%Y-%m-%d\n %H:%M:%S'))
+
+                        chart.x_labels = x
+                        chart.x_labels_major = x[::10]
+
                     y = []
-                    fromts = datetime.utcfromtimestamp
                     for value in values:
-                        x.append(
-                            fromts(value[0]).strftime('%Y-%m-%d\n %H:%M:%S'))
                         y.append(int(value[1]))
 
-                    chart.x_labels = x
-                    chart.x_labels_major = x[::10]
-                    chart.add(metric["instance"], y)
-
-                    if export_format in ["html", "html5"]:
-                        run["chart"] = chart.render(
-                            disable_xml_declaration=True)
+                    if "method" in metric:
+                        y_label = "{m} {p} - {s}".format(
+                            m=metric["method"], p=metric["path"],
+                            s=metric["status"])
+                    elif "pod" in metric:
+                        y_label = metric["pod"]
                     else:
-                        run["chart"] = b64encode(
-                            cairosvg.svg2png(bytestring=chart.render(), dpi=72)
-                        ).decode("utf-8")
+                        y_label = metric["instance"]
+
+                    chart.add(y_label, y)
+
+                if export_format in ["html", "html5"]:
+                    run["chart"] = chart.render(disable_xml_declaration=True)
+                else:
+                    run["chart"] = b64encode(
+                        cairosvg.svg2png(bytestring=chart.render(), dpi=72)
+                    ).decode("utf-8")
