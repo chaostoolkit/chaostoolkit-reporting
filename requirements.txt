@@ -1,0 +1,10 @@
+cairosvg
+click
+dateparser
+logzero
+jinja2
+matplotlib
+maya
+natural
+pygal
+pypandoc
