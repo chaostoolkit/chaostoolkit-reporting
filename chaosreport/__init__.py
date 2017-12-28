@@ -36,7 +36,7 @@ def generate_report(journal_path: str, report_path: str,
     Generate a report document from a chaostoolkit journal.
 
     The report is first generated from the markdown template and converted to
-    the desired format using Pandoc. 
+    the desired format using Pandoc.
     """
     with io.open(journal_path) as fp:
         journal = json.load(fp)
