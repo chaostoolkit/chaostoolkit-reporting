@@ -23,7 +23,6 @@ function release () {
 function main () {
     lint || return 1
     build || return 1
-    run-test || return 1
 
     if [[ $TRAVIS_PYTHON_VERSION =~ ^3\.5+$ ]]; then
         if [[ $TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
