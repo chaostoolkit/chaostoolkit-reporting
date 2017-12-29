@@ -22,7 +22,7 @@ from pygal.style import DefaultStyle
 import pypandoc
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
