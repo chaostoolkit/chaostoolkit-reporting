@@ -22,7 +22,7 @@ from pygal.style import DefaultStyle
 import pypandoc
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -108,30 +108,36 @@ def generate_chart_from_metric_probes(journal: Journal, export_format: str):
                     x_label_rotation=20, style=DefaultStyle,
                     show_minor_x_labels=False, legend_at_bottom=True)
 
-                initialized = False
+                # we may have series with different x length, so we try to
+                # generate a set of all seen abscisses
+                x = set([])
                 for result in data["result"]:
-                    metric = result["metric"]
                     values = result.get("values")
-
-                    # same data for each sequence of values
-                    if not initialized:
-                        initialized = True
-                        chart.title = metric["__name__"]
-
-                        x = []
-                        fromts = datetime.utcfromtimestamp
-                        for value in values:
-                            x.append(
-                                fromts(value[0]).strftime(
-                                    '%Y-%m-%d\n %H:%M:%S'))
-
-                        chart.x_labels = x
-                        chart.x_labels_major = x[::10]
-
-                    y = []
                     for value in values:
-                        y.append(int(value[1]))
+                        x.add(value[0])
 
+                # now we have our range of abscissa, let's map those
+                # timestamps to formatted strings
+                x = sorted(list(x))
+                fromts = datetime.utcfromtimestamp
+                chart.x_labels = [
+                    fromts(v).strftime('%Y-%m-%d\n %H:%M:%S') for v in x]
+                chart.x_labels_major = chart.x_labels[::10]
+
+                metric = data["result"][0]["metric"]
+                chart.title = metric["__name__"]
+
+                for result in data["result"]:
+                    # initialize first to null values to handle missing data
+                    y = [None] * len(x)
+
+                    # next, we update the y with actual values
+                    values = result.get("values")
+                    for value in values:
+                        x_idx = x.index(value[0])
+                        y[x_idx] = int(value[1])
+
+                    metric = result["metric"]
                     if "method" in metric:
                         y_label = "{m} {p} - {s}".format(
                             m=metric["method"], p=metric["path"],
@@ -140,8 +146,7 @@ def generate_chart_from_metric_probes(journal: Journal, export_format: str):
                         y_label = metric["pod"]
                     else:
                         y_label = metric["instance"]
-
-                    chart.add(y_label, y)
+                    chart.add(y_label, y, allow_interruptions=True)
 
                 if export_format in ["html", "html5"]:
                     run["chart"] = chart.render(disable_xml_declaration=True)
