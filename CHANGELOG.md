@@ -2,7 +2,17 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.1...HEAD
+
+## [0.4.1][] - 2018-01-27
+
+[0.4.1]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.0...0.4.1
+
+### Changed
+
+-   Packaging the report template alongside the Python files [#1][1]
+
+[1]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/1
 
 ## [0.4.0][] - 2017-12-29
 
