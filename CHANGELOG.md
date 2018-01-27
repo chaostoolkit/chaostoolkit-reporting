@@ -2,7 +2,17 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.1...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.2...HEAD
+
+## [0.4.2][] - 2018-01-27
+
+[0.4.2]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.1...0.4.2
+
+### Changed
+
+-   Packaging the stylesheets alongside the report template [#1][1]
+
+[1]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/1
 
 ## [0.4.1][] - 2018-01-27
 
