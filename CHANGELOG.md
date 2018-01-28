@@ -2,7 +2,18 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.2...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.0...HEAD
+
+## [0.5.0][] - 2018-01-28
+
+[0.5.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.4.2...0.5.0
+
+### Changed
+
+-   `--smart` argument is gone from pandoc [#3][3]
+-   Render steady state results
+
+[1]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/3
 
 ## [0.4.2][] - 2018-01-27
 
