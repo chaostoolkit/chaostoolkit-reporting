@@ -36,11 +36,21 @@ during the experiment.
 The steady state hypothesis this experiment tried was
 &ldquo;**{{hypo.title}}**&rdquo;.
 
-It was verified with the following probes:
+#### Before Run
 
-|  Probe                                                         |  Tolerance                  |
-| -------------------------------------------------------------- | --------------------------- | {% for probe in hypo.probes %}
-| {{probe.name}}     | {{probe.tolerance}}         | {% endfor %}
+The steady state was {%if steady_states.before.steady_state_met %} verified {% else %} not verified. {% endif %}
+
+|  Probe                                                         |  Tolerance                  | Verified |
+| -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.before.probes %}
+| {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
+
+#### After Run
+
+The steady state was {%if steady_states.after.steady_state_met %} verified {% else %} not verified. {% endif %}
+
+|  Probe                                                         |  Tolerance                  | Verified |
+| -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.after.probes %}
+| {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
 
 ### Method
 
