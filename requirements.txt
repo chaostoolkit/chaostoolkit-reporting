@@ -9,3 +9,4 @@ maya
 natural
 pygal
 pypandoc
+semver
