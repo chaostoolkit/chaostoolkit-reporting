@@ -20,9 +20,10 @@ from natural import date
 import pygal
 from pygal.style import DefaultStyle
 import pypandoc
+import semver
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -54,15 +55,7 @@ def generate_report(journal_path: str, report_path: str,
     journal["today"] = datetime.now().strftime("%d %B %Y")
 
     generate_chart_from_metric_probes(journal, export_format)
-
-    env = Environment(
-        loader=PackageLoader('chaosreport', 'template')
-    )
-    env.filters["pretty_date"] = lambda d: str(maya.MayaDT.from_datetime(
-        dateparser.parse(d)))
-    env.globals["pretty_duration"] = lambda d0, d1: date.delta(
-        dateparser.parse(d0), dateparser.parse(d1), words=False)[0]
-    template = env.get_template("index.md")
+    template = get_report_template(journal["chaoslib-version"])
     report = template.render(journal)
 
     with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8') as fp:
@@ -80,6 +73,40 @@ def generate_report(journal_path: str, report_path: str,
         pypandoc.convert_file(
             fp.name, to=export_format, format='md', outputfile=report_path,
             extra_args=extra_args)
+
+
+def get_report_template(report_version: str):
+    """
+    Retrieve and return the most appropriate template based on the
+    chaostoolkit-lib version used when running the experiment.
+    """
+    env = Environment(
+        loader=PackageLoader('chaosreport', 'template')
+    )
+    env.filters["pretty_date"] = lambda d: str(maya.MayaDT.from_datetime(
+        dateparser.parse(d)))
+    env.globals["pretty_duration"] = lambda d0, d1: date.delta(
+        dateparser.parse(d0), dateparser.parse(d1), words=False)[0]
+
+    templates = []
+    for name in env.list_templates(["md"]):
+        if name == "index.md":
+            continue
+
+        _, _, v = name.split('_')
+        v, _ = v.rsplit('.md', 1)
+        templates.append((semver.parse_version_info(v), name))
+
+    templates = sorted(templates, key=lambda vinfo: vinfo[0])
+
+    for (vinfo, name) in templates:
+        if semver.match(
+            report_version, "<={v}".format(v=semver.format_version(
+                **vinfo._asdict()))):
+            return env.get_template(name)
+
+    # none of the old versions matched, we can use the latest template
+    return env.get_template("index.md")
 
 
 def generate_chart_from_metric_probes(journal: Journal, export_format: str):
