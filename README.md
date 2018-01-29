@@ -31,6 +31,8 @@ Notice that this draws a few [dependencies][deps]:
 
 Some of them are LGPL v3 licensed.
 
+If you are using Mac OS X then you will need to [install some additional dependencies](osx-install.md) that the `chaos report` command relies upon.
+
 You will also need to install the [pandoc][] package on your system.
 
 [pandoc]: https://pandoc.org/
