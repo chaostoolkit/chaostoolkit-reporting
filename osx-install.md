@@ -16,13 +16,7 @@ That's enough to produce HTML reports, but if you'd like to produce `.pdf` repor
 $ brew cask install basictex
 ```
 
-Then `open` the package installed that is grabbed during the Homebrew `install` command, that will reside in `/usr/local/Caskroom/basictex/<date>`. To install `basictex`:
-
-```
-$ brew cask install basictex
-```
-
-The `ls /usr/local/Caskroom/basictex/` to see the actual directory your package resides in. Then use the `open` command to run that Mac OS X package installer, for example:
+Then use `ls /usr/local/Caskroom/basictex/` to see the actual directory the package resides in. Finally use the `open` command to run that Mac OS X package installer, for example:
 
 ```
 $ open /usr/local/Caskroom/basictex/2017.0607/mactex-basictex-20170607.pkg
