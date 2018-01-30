@@ -33,6 +33,13 @@ during the experiment.
 
 ### Steady State Hypothesis
 
+{% if not hypo %}
+
+No steady state hypothesis was defined in this experiment. This run was
+exploratory.
+
+{% else %}
+
 The steady state hypothesis this experiment tried was
 &ldquo;**{{hypo.title}}**&rdquo;.
 
@@ -51,6 +58,8 @@ The steady state was {%if steady_states.after.steady_state_met %} verified {% el
 |  Probe                                                         |  Tolerance                  | Verified |
 | -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.after.probes %}
 | {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
+
+{% endif %}
 
 ### Method
 

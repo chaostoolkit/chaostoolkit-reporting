@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.1...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.2...HEAD
+
+## [0.5.2][] - 2018-01-30
+
+[0.5.2]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.1...0.5.2
+
+### Changed
+
+-   Steady state can be optional so don't expect it
 
 ## [0.5.1][] - 2018-01-29
 

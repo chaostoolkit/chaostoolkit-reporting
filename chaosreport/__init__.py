@@ -23,7 +23,7 @@ import pypandoc
 import semver
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -45,7 +45,7 @@ def generate_report(journal_path: str, report_path: str,
     # inject some pre-processed values into the journal for rendering
     experiment = journal["experiment"]
     journal["chaoslib_version"] = journal["chaoslib-version"]
-    journal["hypo"] = experiment["steady-state-hypothesis"]
+    journal["hypo"] = experiment.get("steady-state-hypothesis")
     journal["num_probes"] = len(list(
         filter(lambda a: a["type"] == "probe", experiment["method"])))
     journal["num_actions"] = len(list(
