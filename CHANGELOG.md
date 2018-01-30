@@ -11,6 +11,9 @@
 ### Changed
 
 -   Steady state can be optional so don't expect it
+-   Echo a message indicating the report was created [#8][8]
+
+[8]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/8
 
 ## [0.5.1][] - 2018-01-29
 

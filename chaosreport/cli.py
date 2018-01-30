@@ -18,3 +18,4 @@ def report(export_format: str = "markdown", journal: str = "chaos-report.json",
     Generate a report from the run journal.
     """
     generate_report(journal, report, export_format)
+    click.echo("Report generated as '{f}'".format(f=report))
