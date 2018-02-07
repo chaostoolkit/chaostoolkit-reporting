@@ -23,7 +23,7 @@ import pypandoc
 import semver
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.5.2'
+__version__ = '0.6.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
