@@ -4,6 +4,13 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.2...HEAD
 
+### Changed
+
+-   the chaostoolkit cli now produces journal as `journal.json`,
+    not `chaos-report.json` [#9][9]
+
+[9]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/9
+
 ## [0.5.2][] - 2018-01-30
 
 [0.5.2]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.5.1...0.5.2
