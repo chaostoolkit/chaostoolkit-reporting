@@ -2,14 +2,18 @@
 from base64 import b64encode
 from datetime import datetime, timedelta
 import io
+import itertools
 import json
 from math import pi
 import os
 import os.path
+import shlex
+import shutil
+import subprocess
 import tempfile
 
 import cairosvg
-from chaoslib.types import Journal
+from chaoslib.types import Journal, Run
 import dateparser
 from jinja2 import Environment, PackageLoader, select_autoescape
 from logzero import logger
@@ -23,7 +27,7 @@ import pypandoc
 import semver
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -111,8 +115,8 @@ def get_report_template(report_version: str):
 
 def generate_chart_from_metric_probes(journal: Journal, export_format: str):
     """
-    Generate charts from probes that pulled data out of Prometheus. The charts
-    are serialized to SVG (for HTML reports) and PNG (for PDF reports).
+    Generate charts from probes that pulled data. The charts
+    are serialized to SVG (for HTML reports) or PNG (for PDF reports).
     """
     for run in journal["run"]:
         if run["status"] != "succeeded":
@@ -121,62 +125,231 @@ def generate_chart_from_metric_probes(journal: Journal, export_format: str):
         if run["activity"]["type"] != "probe":
             continue
 
-        output = run.get("output")
-        if not isinstance(output, dict):
-            continue
+        provider = run["activity"]["provider"]
+        if provider["type"] == "python":
+            if "chaosprometheus" in provider["module"]:
+                generate_chart_from_prometheus(run, export_format)
 
-        data = output.get("data")
-        if data:
-            result_type = data.get("resultType")
-            if result_type == "matrix":
+        elif provider["type"] == "process":
+            path = provider["path"]
+            if "vegeta" in path:
+                generate_from_vegeta_result(run, export_format)
 
-                chart = pygal.Line(
-                    x_label_rotation=20, style=DefaultStyle,
-                    show_minor_x_labels=False, legend_at_bottom=True)
 
-                # we may have series with different x length, so we try to
-                # generate a set of all seen abscisses
-                x = set([])
-                for result in data["result"]:
-                    values = result.get("values")
-                    for value in values:
-                        x.add(value[0])
+def generate_chart_from_prometheus(run: Run, export_format: str):
+    """
+    Generate charts from probes that pulled data out of Prometheus. The charts
+    are serialized to SVG (for HTML reports) and PNG (for PDF reports).
+    """
+    output = run.get("output")
+    if not isinstance(output, dict):
+        return
 
-                # now we have our range of abscissa, let's map those
-                # timestamps to formatted strings
-                x = sorted(list(x))
-                fromts = datetime.utcfromtimestamp
-                chart.x_labels = [
-                    fromts(v).strftime('%Y-%m-%d\n %H:%M:%S') for v in x]
-                chart.x_labels_major = chart.x_labels[::10]
+    data = output.get("data")
+    if data:
+        result_type = data.get("resultType")
+        if result_type == "matrix":
 
-                metric = data["result"][0]["metric"]
-                chart.title = metric["__name__"]
+            chart = pygal.Line(
+                x_label_rotation=20, style=DefaultStyle, truncate_legend=-1,
+                show_minor_x_labels=False, legend_at_bottom=True,
+                legend_at_bottom_columns=1)
 
-                for result in data["result"]:
-                    # initialize first to null values to handle missing data
-                    y = [None] * len(x)
+            # we may have series with different x length, so we try to
+            # generate a set of all seen abscisses
+            x = set([])
+            for result in data["result"]:
+                values = result.get("values")
+                for value in values:
+                    x.add(value[0])
 
-                    # next, we update the y with actual values
-                    values = result.get("values")
-                    for value in values:
-                        x_idx = x.index(value[0])
-                        y[x_idx] = int(value[1])
+            # now we have our range of abscissa, let's map those
+            # timestamps to formatted strings
+            x = sorted(list(x))
+            fromts = datetime.utcfromtimestamp
+            chart.x_labels = [
+                fromts(v).strftime('%Y-%m-%d\n %H:%M:%S') for v in x]
+            chart.x_labels_major = chart.x_labels[::10]
+            chart.title = "Query -  {}".format(
+                run["activity"]["provider"]["arguments"]["query"])
 
-                    metric = result["metric"]
-                    if "method" in metric:
-                        y_label = "{m} {p} - {s}".format(
-                            m=metric["method"], p=metric["path"],
-                            s=metric["status"])
-                    elif "pod" in metric:
-                        y_label = metric["pod"]
-                    else:
-                        y_label = metric["instance"]
-                    chart.add(y_label, y, allow_interruptions=True)
+            for result in data["result"]:
+                # initialize first to null values to handle missing data
+                y = [None] * len(x)
 
-                if export_format in ["html", "html5"]:
-                    run["chart"] = chart.render(disable_xml_declaration=True)
+                # next, we update the y with actual values
+                values = result.get("values")
+                for value in values:
+                    x_idx = x.index(value[0])
+                    y[x_idx] = int(value[1])
+
+                metric = result["metric"]
+                if "method" in metric:
+                    y_label = "{m} {p} - {s}".format(
+                        m=metric["method"], p=metric["path"],
+                        s=metric["status"])
+                elif "pod" in metric:
+                    y_label = metric["pod"]
                 else:
-                    run["chart"] = b64encode(
+                    y_label = "_".join(
+                        [v for k, v in metric.items() if k != '__name__'])
+                chart.add(y_label, y, allow_interruptions=True)
+
+            if export_format in ["html", "html5"]:
+                run["charts"] = [chart.render(disable_xml_declaration=True)]
+            else:
+                run["charts"] = [
+                    b64encode(
                         cairosvg.svg2png(bytestring=chart.render(), dpi=72)
                     ).decode("utf-8")
+                ]
+
+
+def generate_from_vegeta_result(run: Run, export_format: str):
+    """
+    Generate charts from probes that pulled data out of Prometheus. The charts
+    are serialized to SVG (for HTML reports) and PNG (for PDF reports).
+    """
+    vegeta_path = shutil.which("vegeta")
+    if not vegeta_path:
+        logger.warning("Failed to find the 'vegeta' binary in PATH")
+        return
+
+    provider = run["activity"]["provider"]
+    args = provider.get("arguments")
+    if not args:
+        return
+
+    if isinstance(args, str):
+        args = shlex.split(args)
+    elif isinstance(args, dict):
+        args = itertools.chain.from_iterable(args.items())
+        args = list([str(p) for p in args if p not in (None, "")])
+
+    if "attack" not in args:
+        return
+
+    result_path = None
+    for idx, t in enumerate(args):
+        if t.startswith("-output="):
+            result_path = t[8:]
+            break
+        elif t.startswith("-output"):
+            result_path = args[idx+1]
+            break
+
+    if not result_path:
+        return
+
+    if not os.path.exists(result_path):
+        logger.warning("vegeta result path could not be found: {}".format(
+            result_path))
+        return
+
+    cmd = "{} report -inputs={} -reporter=text".format(
+        vegeta_path, result_path)
+    try:
+        proc = subprocess.run(
+            cmd, timeout=10, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            shell=True, check=True)
+    except subprocess.CalledProcessError as x:
+        logger.error("vegeta reporter failed: {}".format(str(x)))
+    except subprocess.TimeoutExpired:
+        logger.error("vegeta reporter took too long to complete")
+    else:
+        run["text"] = proc.stdout.decode('utf-8')
+
+    cmd = "{} dump -inputs={} -dumper=json".format(
+        vegeta_path, result_path)
+    try:
+        proc = subprocess.run(
+            cmd, timeout=10, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            shell=True, check=True)
+    except subprocess.CalledProcessError as x:
+        logger.error("vegeta reporter failed: {}".format(str(x)))
+    except subprocess.TimeoutExpired:
+        logger.error("vegeta dumper took too long to complete")
+    else:
+        calls = proc.stdout.decode('utf-8').strip().replace("\n", ",")
+        data = json.loads("[{}]".format(calls))
+
+        def latency_chart() -> pygal.Line:
+            chart = pygal.Line(
+                    x_label_rotation=20, style=DefaultStyle, logarithmic=True,
+                    show_minor_x_labels=False, legend_at_bottom=False)
+            chart.title = "HTTP Latency"
+            chart.y_title = "Latency (in ms)"
+            chart.x_labels = [call["timestamp"] for call in data]
+            num_entries = len(chart.x_labels)
+            step = 10
+            if num_entries > 100:
+                step = 200
+            elif num_entries > 1000:
+                step = 2000
+            chart.x_labels_major = chart.x_labels[::step]
+
+            y_values = {}
+            for index, call in enumerate(data):
+                code = str(call["code"])
+                if code not in y_values:
+                    y_values[code] = [None] * num_entries
+
+                latency = call["latency"] / 1000000.
+                y_values[code].insert(index, latency)
+
+            for code, latencies in y_values.items():
+                chart.add(code, latencies, allow_interruptions=True)
+
+            return chart
+
+        def status_distribution() -> pygal.Bar:
+            chart = pygal.Bar(
+                x_label_rotation=20, style=DefaultStyle,
+                show_minor_x_labels=False, legend_at_bottom=False)
+            chart.title = "Distribution of HTTP Responses Per Second"
+            chart.y_title = "Status Code Count"
+
+            status_intervals = {}
+            for call in data:
+                ts = call["timestamp"]
+                dt = dateparser.parse(ts)
+                by_second_dt = dt.replace(microsecond=0).isoformat()
+                if by_second_dt not in status_intervals:
+                    status_intervals[by_second_dt] = {}
+
+                code = call["code"]
+                if code not in status_intervals[by_second_dt]:
+                    status_intervals[by_second_dt][code] = 0
+                status_intervals[by_second_dt][code] = \
+                    status_intervals[by_second_dt][code] + 1
+
+            chart.x_labels = list(status_intervals.keys())
+            chart.x_labels_major = chart.x_labels[::5]
+
+            num_entries = len(chart.x_labels)
+            y_values = {}
+            for index, interval in enumerate(status_intervals):
+                for code, count in status_intervals[interval].items():
+                    if code not in y_values:
+                        y_values[code] = [None] * num_entries
+                    y_values[code].insert(index, count)
+
+            for code, count in y_values.items():
+                chart.add(str(code), count, allow_interruptions=True)
+
+            return chart
+
+        def add_chart(chart: pygal.Graph):
+            if "charts" not in run:
+                run["charts"] = []
+
+            if export_format in ["html", "html5"]:
+                run["charts"].append(
+                    chart.render(disable_xml_declaration=True))
+            else:
+                run["charts"].append(b64encode(
+                    cairosvg.svg2png(bytestring=chart.render(), dpi=72)
+                ).decode("utf-8"))
+
+        add_chart(latency_chart())
+        add_chart(status_distribution())

@@ -129,31 +129,24 @@ while running:
 {% endif %}
 {% endif %}
 
-{%if item.text %}
+{%if item.chart %}
   {% if export_format not in ["html", "html5"] %}
-```
-{{item.text}}
-```
-
-  {% else %}
-<figure>
-    {{item.text}}
-</figure>
-  {% endif %}
-{% endif %}
-
-{%if item.charts %}
-{% for chart in item.charts %}
-  {% if export_format not in ["html", "html5"] %}
-![](data:image/png;base64,{{chart}})
+![](data:image/png;base64,{{item.chart}})
 \ 
 
   {% else %}
 <figure>
-    {{chart}}
+    {{item.chart}}
 </figure>
   {% endif %}
-  {% endfor %}
+
+{%if item.text %}
+    {{item.text}}
+  {% else %}
+<pre>
+    {{item.text}}
+</pre>
+  {% endif %}
 {% endif %}
 
 {% endfor %}
@@ -165,8 +158,8 @@ while running:
 
 The *{{item.activity.type}}* returned the following result:
 
-```javascript
-{{item.output | pprint}}
+```python
+{{item.output | pprint}}
 ```
 
 {% endfor %}

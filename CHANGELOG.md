@@ -2,7 +2,20 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.0...HEAD
+
+## [0.7.0][] - 2018-04-13
+
+[0.7.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.6.0...0.7.0
+
+### Added
+
+-   insert vegeta results as charts and text
+
+### Changed
+
+-   better chart support
+-   can inline many charts at once for a given probe
 
 ## [0.6.0][] - 2018-02-07
 

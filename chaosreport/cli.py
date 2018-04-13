@@ -12,8 +12,8 @@ __all__ = ["cli"]
               help='Format to export the report to: html, markdown, pdf.')
 @click.argument('journal', type=click.Path(exists=True))
 @click.argument('report', type=click.Path(exists=False))
-def report(export_format: str="markdown", journal: str="journal.json",
-           report: str="report.md"):
+def report(export_format: str = "markdown", journal: str = "journal.json",
+           report: str = "report.md"):
     """
     Generate a report from the run journal.
     """
