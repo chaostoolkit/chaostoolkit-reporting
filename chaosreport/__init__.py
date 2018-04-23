@@ -122,12 +122,12 @@ def generate_chart_from_metric_probes(journal: Journal, export_format: str):
         if run["status"] != "succeeded":
             continue
 
-        if run["activity"]["type"] != "probe":
-            continue
-
         provider = run["activity"]["provider"]
+        activity_type = run["activity"]["type"]
+
         if provider["type"] == "python":
-            if "chaosprometheus" in provider["module"]:
+            if "chaosprometheus" in provider["module"] and \
+                    activity_type == "probe":
                 generate_chart_from_prometheus(run, export_format)
 
         elif provider["type"] == "process":

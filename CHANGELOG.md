@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.1...HEAD
+
+## [0.7.1][] - 2018-04-23
+
+[0.7.1]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.0...0.7.1
+
+### Changed
+
+-   process actions as well, not just probes
 
 ## [0.7.0][] - 2018-04-13
 
