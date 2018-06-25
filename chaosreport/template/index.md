@@ -15,21 +15,32 @@ abstract: |
 {{experiment.description}}
 {% endif %}
 
-|                        |                     |
-| ---------------------- | ------------------- |
-| **Status**             | {{status}} |
-| **Tagged**             | {% for tag in experiment.tags %}{% if loop.last %}{{tag}}{% else %}{{tag}}, {% endif %}{% endfor %} |
-| **Executed From**      | {{node}} |
-| **Platform**           | {{platform}} |
-| **Started**            | {{start | pretty_date}} | 
-| **Completed**          | {{end | pretty_date}} |
-| **Duration**           | {{pretty_duration(start, end)}} |
+|                               |                     |
+| ----------------------------- | ------------------- |
+| **Status**                    | {{status}} |
+| **Tagged**                    | {% for tag in experiment.tags %}{% if loop.last %}{{tag}}{% else %}{{tag}}, {% endif %}{% endfor %} |
+| **Executed From**             | {{node}} |
+| **Platform**                  | {{platform}} |
+| **Started**                   | {{start | pretty_date}} | 
+| **Completed**                 | {{end | pretty_date}} |
+| **Duration**                  | {{pretty_duration(start, end)}} |
 
 ## Experiment
 
 The experiment was made of {{num_actions}} actions, to vary conditions in your
 system, and {{num_probes}} probes, to collect objective data from your system
 during the experiment.
+
+{% if experiment.contributions %}
+### Reliability Contribution Model
+
+An estimate of relative system reliability contributions obtained from building
+and executing this experiment
+
+| Impact     | Ratio |
+| ---------  | ------------------- |{% for c in experiment.contributions %}
+| {{c.name}} | {{c.ratio}}% |{% endfor %}
+{% endif %}
 
 ### Steady State Hypothesis
 

@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.1...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...HEAD
+
+## [0.8.0][] - 2018-06-25
+
+[0.8.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.1...0.8.0
+
+### Added
+
+-   a section about reliability contributions of an experiment
 
 ## [0.7.1][] - 2018-04-23
 

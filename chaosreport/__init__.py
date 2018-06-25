@@ -13,7 +13,7 @@ import subprocess
 import tempfile
 
 import cairosvg
-from chaoslib.types import Journal, Run
+from chaoslib.types import Experiment, Journal, Run
 import dateparser
 from jinja2 import Environment, PackageLoader, select_autoescape
 from logzero import logger
@@ -27,7 +27,7 @@ import pypandoc
 import semver
 
 __all__ = ["__version__", "generate_report"]
-__version__ = '0.7.1'
+__version__ = '0.8.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -59,6 +59,7 @@ def generate_report(journal_path: str, report_path: str,
     journal["today"] = datetime.now().strftime("%d %B %Y")
 
     generate_chart_from_metric_probes(journal, export_format)
+    add_contribution_model(experiment)
     template = get_report_template(journal["chaoslib-version"])
     report = template.render(journal)
 
@@ -353,3 +354,17 @@ def generate_from_vegeta_result(run: Run, export_format: str):
 
         add_chart(latency_chart())
         add_chart(status_distribution())
+
+
+def add_contribution_model(experiment: Experiment):
+    """
+    Expose the contribution of that experiment to the report.
+
+    As this is part of an extension, we bubble it up to the experiment itself
+    for rendering purpose.
+    """
+    for extension in experiment.get("extensions", []):
+        contributions = extension.get("contributions")
+        if contributions:
+            experiment["contributions"] = contributions
+            break
