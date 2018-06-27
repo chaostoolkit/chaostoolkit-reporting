@@ -24,4 +24,11 @@ $ open /usr/local/Caskroom/basictex/2017.0607/mactex-basictex-20170607.pkg
 
 Once the installer has completed, you should then be able to produce `.pdf` reports as well.
 
-***NOTE:*** You may need start a new Terminal and then re-enable your Python virtual environment so that the `chaos report` command can find the `pdflatex` command it is looking for.
+***NOTES:***
+- You may need start a new Terminal and then re-enable your Python virtual environment so that the `chaos report` command can find the `pdflatex` command it is looking for.
+
+- If Python has been installed using `brew`, you may see the error:
+
+  ```RuntimeError: Python is not installed as a framework. The Mac OS X backend will not be able to function correctly if Python is not installed as a framework.```
+
+  In this case, run the following: `$ echo "backend: TkAgg" >> ~/.matplotlib/matplotlibrc`
