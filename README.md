@@ -48,6 +48,16 @@ $ sudo apt-get install texlive-latex-base \
     pdflatex
 ```
 
+### Download a Docker Image
+
+As the dependencies for this plugin can be difficult to get right, we also
+provide a docker image. Note that this image is rather big with 1.4Gb to
+pull.
+
+```console
+$ docker pull chaostoolkit/reporting
+```
+
 ## Usage
 
 Once installed, a new `report` subcommand will be made available to the
@@ -61,6 +71,56 @@ or, for a PDF document:
 
 ```
 $ chaos report --export-format=pdf chaos-report.json report.pdf
+```
+
+### Use a Docker container
+
+To generate a PDF report using the Docker image:
+
+```console
+$ ls .
+journal.json
+
+$ docker run \
+    --user `id -u` \
+    -v `pwd`:/tmp/result \
+    -it \
+    chaostoolkit/reporting
+
+$ ls .
+journal.json report.pdf chaostoolkit.log
+```
+
+As you can see, you should run that command from where the `journal.json`
+file, generated during an experiment run, can be found. This will create a
+`report.pdf` in this directory.
+
+The file will be owned by the user id returned by the command `id -u`, it should
+be your user. The reason we specify a user is that, by default, the container
+runs as root and the image doesn't make a guess about which user will run
+the container. If you don't have the `id` command you can set the value
+manually as follows instead: `--user 1000:1000` assuming both your user and
+group ids are `1000`.
+
+The default command of the image is equivalent to running this without a
+container:
+
+```console
+$ chaos report --export-format=pdf journal.json report.pdf
+```
+
+If you wish to override that command, pass the `chaos report` parameters as
+follows:
+
+```console
+$ docker run \
+    --user `id -u` \
+    -v `pwd`:/tmp/result \
+    -it \
+    chaostoolkit/reporting -- report --export-format=html5 journal.json report.html
+
+$ ls .
+journal.json report.html chaostoolkit.log
 ```
 
 ## Contribute

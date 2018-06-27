@@ -4,6 +4,10 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...HEAD
 
+### Added
+
+-   a Dockerfile to build an image with all the system-wide dependencies
+
 ## [0.8.0][] - 2018-06-25
 
 [0.8.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.7.1...0.8.0
