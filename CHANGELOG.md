@@ -2,11 +2,19 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.9.0...HEAD
+
+## [0.9.0][] - 2018-07-19
+
+[0.9.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...0.9.0
 
 ### Added
 
 -   a Dockerfile to build an image with all the system-wide dependencies
+
+### Changed
+
+-   Showing entire exception in PDF reports
 
 ## [0.8.0][] - 2018-06-25
 

@@ -132,10 +132,12 @@ The *{{item.activity.name}}* {{item.activity.type}} raised the following error
 while running:
 
 {% if export_format == "pdf" %}
-{{item.exception[0]|wordwrap}}
+```python
+{{item.exception|join|wordwrap(70, break_long_words=False)}}
+```
 {% else %}
 ```python
-{{item.exception[0]}}
+{{item.exception|join}}
 ```
 {% endif %}
 {% endif %}
