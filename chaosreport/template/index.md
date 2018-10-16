@@ -26,14 +26,28 @@ system, and {{num_probes}} probes, to collect objective data from your system
 during the experiment.
 
 {% if experiment.contributions %}
-#### Reliability Contribution Model
 
-An estimate of relative system reliability contributions obtained from building
-and executing this experiment
+#### Organization Contributions
 
-| Impact     | Ratio |
-| ---------  | ------------------- |{% for c in experiment.contributions %}
-| {{c.name}} | {{c.ratio}}% |{% endfor %}
+An estimate of relative system properties this experiment contributes to:
+
+| Contribution     | Impact |
+| ---------  | ------------------- |{% for c, w in experiment.contributions.items() %}
+| {{c}} | {{w}} |{% endfor %}
+
+The *"none"* value for an impact indicates that this experiment explicitely
+does not address that specific property.
+
+{% if export_format not in ["html", "html5"] %}
+![](data:image/png;base64,{{experiment.contributions_chart}})
+\ 
+
+  {% else %}
+<figure>
+    {{experiment.contributions_chart}}
+</figure>
+  {% endif %}
+
 {% endif %}
 
 #### Steady State Hypothesis

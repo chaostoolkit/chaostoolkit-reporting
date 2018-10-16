@@ -16,6 +16,10 @@
 
 [16]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/16
 
+-   render contributions into the report [#81][81]
+
+[81]: https://github.com/chaostoolkit/chaostoolkit/issues/81
+
 ## [0.9.0][] - 2018-07-19
 
 [0.9.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...0.9.0
