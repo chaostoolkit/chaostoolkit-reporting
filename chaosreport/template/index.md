@@ -1,14 +1,8 @@
----
-title: {{experiment.title}}
-subtitle: Chaos Toolkit Experiment Report
-description: {{experiment.description}}
-subject: [{% for tag in experiment.tags %}{% if loop.last %}{{tag}}{% else %}{{tag}}, {% endif %}{% endfor %}]
-date: {{today}}
-abstract: |
-    {{experiment.description}}
----
+## {{experiment.title}}
 
-## Summary
+{{experiment.description}}
+
+### Summary
 {% if export_format != "pdf" %}
 {{experiment.title}}
 
@@ -25,14 +19,14 @@ abstract: |
 | **Completed**                 | {{end | pretty_date}} |
 | **Duration**                  | {{pretty_duration(start, end)}} |
 
-## Experiment
+### Definition
 
 The experiment was made of {{num_actions}} actions, to vary conditions in your
 system, and {{num_probes}} probes, to collect objective data from your system
 during the experiment.
 
 {% if experiment.contributions %}
-### Reliability Contribution Model
+#### Reliability Contribution Model
 
 An estimate of relative system reliability contributions obtained from building
 and executing this experiment
@@ -42,7 +36,7 @@ and executing this experiment
 | {{c.name}} | {{c.ratio}}% |{% endfor %}
 {% endif %}
 
-### Steady State Hypothesis
+#### Steady State Hypothesis
 
 {% if not hypo %}
 
@@ -54,7 +48,7 @@ exploratory.
 The steady state hypothesis this experiment tried was
 &ldquo;**{{hypo.title}}**&rdquo;.
 
-#### Before Run
+##### Before Run
 
 The steady state was {%if steady_states.before.steady_state_met %} verified {% else %} not verified. {% endif %}
 
@@ -62,7 +56,7 @@ The steady state was {%if steady_states.before.steady_state_met %} verified {% e
 | -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.before.probes %}
 | {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
 
-#### After Run
+##### After Run
 
 The steady state was {%if steady_states.after.steady_state_met %} verified {% else %} not verified. {% endif %}
 
@@ -72,7 +66,7 @@ The steady state was {%if steady_states.after.steady_state_met %} verified {% el
 
 {% endif %}
 
-### Method
+#### Method
 
 The experiment method defines the sequence of activities that help gathering
 evidence towards, or against, the hypothesis.
@@ -83,13 +77,13 @@ The following activities were conducted as part of the experimental's method:
 | ---------- | --------------------------------------------------------------- | {% for activity in experiment.method %}
 | {{activity.type}} | {{activity.name}} | {% endfor %}
 
-## Result
+### Result
 
 The experiment was conducted on {{start|pretty_date}} and lasted roughly
 {{pretty_duration(start, end)}}.
 
 {% for item in run %}
-### {{item.activity.type | title}} - {{item.activity.name}}
+#### {{item.activity.type | title}} - {{item.activity.name}}
 
 |                       |               |
 | --------------------- | ------------- |
@@ -171,10 +165,10 @@ while running:
 
 {% endfor %}
 
-## Appendix
+### Appendix
 
 {% for item in run %}
-### {{item.activity.type | title}} - {{item.activity.name}}
+#### {{item.activity.type | title}} - {{item.activity.name}}
 
 The *{{item.activity.type}}* returned the following result:
 

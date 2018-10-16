@@ -11,6 +11,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+from typing import List
 
 import cairosvg
 from chaoslib.types import Experiment, Journal, Run
@@ -26,7 +27,8 @@ from pygal.style import DefaultStyle
 import pypandoc
 import semver
 
-__all__ = ["__version__", "generate_report"]
+__all__ = ["__version__", "generate_report", "generate_report_header",
+           "save_report"]
 __version__ = '0.9.0'
 
 curdir = os.getcwd()
@@ -35,8 +37,31 @@ css_dir = os.path.join(basedir, "template", "css")
 js_dir = os.path.join(basedir, "template", "js")
 
 
-def generate_report(journal_path: str, report_path: str,
-                    export_format: str = "markdown"):
+def generate_report_header(journal_paths: List[str],
+                           export_format: str = "markdown") -> str:
+    header_template = get_report_template(None, "header.md")
+
+    header_info = {}
+    header_info["title"] = "Chaos Engineering Report"
+    header_info["today"] = datetime.now().strftime("%d %B %Y")
+    header_info["export_format"] = export_format
+    header_info["tags"] = []
+
+    experiment_titles = []
+
+    for journal_path in journal_paths:
+        with io.open(journal_path) as fp:
+            journal = json.load(fp)
+
+        experiment = journal.get("experiment")
+        header_info["tags"].extend(experiment.get("tags", []))
+
+    header_info["tags"] = set(header_info["tags"])
+    header = header_template.render(header_info)
+    return header
+
+
+def generate_report(journal_path: str, export_format: str = "markdown") -> str:
     """
     Generate a report document from a chaostoolkit journal.
 
@@ -63,8 +88,17 @@ def generate_report(journal_path: str, report_path: str,
     template = get_report_template(journal["chaoslib-version"])
     report = template.render(journal)
 
+    return report
+
+
+def save_report(header: str, reports: List[str], report_path: str,
+                export_format: str = "markdown"):
     with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8') as fp:
-        fp.write(report)
+        fp.write(header)
+
+        for report in reports:
+            fp.write(report)
+
         fp.seek(0)
         extra_args = [
             "--self-contained",
@@ -80,7 +114,8 @@ def generate_report(journal_path: str, report_path: str,
             extra_args=extra_args)
 
 
-def get_report_template(report_version: str):
+def get_report_template(report_version: str,
+                        default_template: str = "index.md"):
     """
     Retrieve and return the most appropriate template based on the
     chaostoolkit-lib version used when running the experiment.
@@ -93,9 +128,12 @@ def get_report_template(report_version: str):
     env.globals["pretty_duration"] = lambda d0, d1: date.delta(
         dateparser.parse(d0), dateparser.parse(d1), words=False)[0]
 
+    if not report_version:
+        return env.get_template(default_template)
+
     templates = []
     for name in env.list_templates(["md"]):
-        if name == "index.md":
+        if name in ["index.md", "header.md"]:
             continue
 
         _, _, v = name.split('_')
@@ -111,7 +149,7 @@ def get_report_template(report_version: str):
             return env.get_template(name)
 
     # none of the old versions matched, we can use the latest template
-    return env.get_template("index.md")
+    return env.get_template(default_template)
 
 
 def generate_chart_from_metric_probes(journal: Journal, export_format: str):

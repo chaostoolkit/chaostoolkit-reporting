@@ -111,3 +111,7 @@ junit-test-results.xml
 
 # Misc from Mac OS
 .DS_Store
+
+
+journal*.json
+report.*

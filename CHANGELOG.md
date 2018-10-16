@@ -4,6 +4,18 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.9.0...HEAD
 
+### Changed
+
+-   aggregate any number of experiment journals into a single report. This
+    changes slightly the report that was produced. [#16][16]
+
+    ```
+    $ chaos report --export-format=pdf journal1.json journal2.json report.pdf
+    $ chaos report --export-format=pdf journal*.json report.pdf
+    ```
+
+[16]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/16
+
 ## [0.9.0][] - 2018-07-19
 
 [0.9.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.8.0...0.9.0
