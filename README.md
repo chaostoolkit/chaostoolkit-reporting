@@ -73,6 +73,18 @@ or, for a PDF document:
 $ chaos report --export-format=pdf chaos-report.json report.pdf
 ```
 
+You can also generate a single report from many journals at once:
+
+```
+$ chaos report --export-format=pdf journal-1.json journal-2 journal-3 report.pdf
+```
+
+Or more succintly:
+
+```
+$ chaos report --export-format=pdf journal-*.json report.pdf
+```
+
 ### Use a Docker container
 
 To generate a PDF report using the Docker image:
