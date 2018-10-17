@@ -29,7 +29,7 @@ import semver
 
 __all__ = ["__version__", "generate_report", "generate_report_header",
            "save_report"]
-__version__ = '0.9.0'
+__version__ = '0.10.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
