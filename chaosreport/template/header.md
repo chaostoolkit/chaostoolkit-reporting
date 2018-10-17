@@ -12,6 +12,7 @@ following subjects:
 
 {% for tag in tags %}{% if loop.last %}*{{tag}}*{% else %}*{{tag}}*, {% endif %}{% endfor %}
 
+{% if contributions %}
 ## Contributions 
 
 Contributions surface the properties this collection of experiments
@@ -90,6 +91,8 @@ covered by the experiments.
 [^2]: Empty dots indicate a tag is explicitely not addressing a given
 contribution while missing dots indicate no data for a given contribution.
 
+{% endif %}
 \newpage
-# Experiments
-
+{% if num_experiments == 1 %}# Experiment
+{%else%}# Experiments
+{% endif %}
