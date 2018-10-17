@@ -45,10 +45,11 @@ def generate_report_header(journal_paths: List[str],
     header_info["title"] = "Chaos Engineering Report"
     header_info["today"] = datetime.now().strftime("%d %B %Y")
     header_info["export_format"] = export_format
-    header_info["tags"] = []
+    tags = []
 
     contribution_labels = []
-    contributions_by_level = []
+    contributions_by_experiment = []
+    contributions_by_tag = []
     experiment_titles = []
 
     for journal_path in journal_paths:
@@ -56,7 +57,8 @@ def generate_report_header(journal_paths: List[str],
             journal = json.load(fp)
 
         experiment = journal.get("experiment")
-        header_info["tags"].extend(experiment.get("tags", []))
+        experiment_tags = experiment.get("tags", [])
+        tags.extend(experiment_tags)
         contribs = experiment.get("contributions")
 
         if not contribs:
@@ -67,14 +69,19 @@ def generate_report_header(journal_paths: List[str],
         for contrib in contribs:
             contribution_labels.append(contrib)
             level = contribs[contrib]
-            contributions_by_level.append((title, level, contrib))
+            contributions_by_experiment.append((title, level, contrib))
+            for tag in experiment_tags:
+                contributions_by_tag.append((tag, level, contrib))
 
     number_of_contributions = len(set(contribution_labels))
     unique_contributions = sorted(set(contribution_labels))
     header_info["num_experiments"] = len(experiment_titles)
     header_info["num_distinct_contributions"] = number_of_contributions
-    header_info["tags"] = set(header_info["tags"])
+    header_info["tags"] = tags = set(tags)
 
+    ############################################################################
+    # Distribution chart
+    ############################################################################
     dist_chart = pygal.Bar(
         print_values=True, print_values_position='top', show_legend=False,
         show_y_labels=False, legend_at_bottom=True)
@@ -94,12 +101,16 @@ def generate_report_header(journal_paths: List[str],
             cairosvg.svg2png(
                 bytestring=dist_chart.render(), dpi=72)).decode("utf-8")
 
+    contribution_labels = list(unique_contributions)
+
+    ############################################################################
+    # Dot chart per experiment
+    ############################################################################
     contributions = {}
     for title in experiment_titles:
         contributions[title] = [None] * number_of_contributions
 
-    contribution_labels = list(unique_contributions)
-    for (title, level, contrib) in contributions_by_level:
+    for (title, level, contrib) in contributions_by_experiment:
         idx = contribution_labels.index(contrib)
         amount = 0
         if level == "high":
@@ -118,17 +129,74 @@ def generate_report_header(journal_paths: List[str],
         legend_at_bottom_columns=1, show_y_labels=False, legend_at_bottom=True,
         show_legend=True, x_label_rotation=30, style=LightColorizedStyle,
         interpolate='hermite')
-    chart.title = 'Organization Contributions Impact'
+    chart.title = 'Experiment Contributions to Organization Properties'
     chart.x_labels = contribution_labels
     for title in contributions:
         chart.add(
             title, contributions[title], fill=False, allow_interruptions=True)
 
     if export_format in ["html", "html5"]:
-        header_info["contributions"] = chart.render(
+        header_info["contributions_per_exp"] = chart.render(
                 disable_xml_declaration=True)
     else:
-        header_info["contributions"] = b64encode(
+        header_info["contributions_per_exp"] = b64encode(
+            cairosvg.svg2png(
+                bytestring=chart.render(), dpi=72)).decode("utf-8")
+
+    chart = pygal.Radar(
+        legend_at_bottom_columns=1, show_y_labels=False, legend_at_bottom=True,
+        show_legend=True, x_label_rotation=30, style=LightColorizedStyle,
+        interpolate='hermite')
+    chart.title = 'Experiment Contributions to Organization Properties'
+    chart.x_labels = contribution_labels
+    for title in contributions:
+        chart.add(
+            title, contributions[title], fill=False, allow_interruptions=True)
+
+    if export_format in ["html", "html5"]:
+        header_info["contributions_per_exp_radar"] = chart.render(
+                disable_xml_declaration=True)
+    else:
+        header_info["contributions_per_exp_radar"] = b64encode(
+            cairosvg.svg2png(
+                bytestring=chart.render(), dpi=72)).decode("utf-8")
+
+    ############################################################################
+    # Dot chart per tag
+    ############################################################################
+    contributions = {}
+    for tag in tags:
+        contributions[tag] = [None] * number_of_contributions
+
+    for (tag, level, contrib) in contributions_by_tag:
+        idx = contribution_labels.index(contrib)
+        amount = 0
+        if level == "high":
+            amount = 0.75
+        elif level == "medium":
+            amount = 0.50
+        elif level == "low":
+            amount = 0.25
+        elif level == "none":
+            amount = -0.1
+        else:
+            continue
+        contributions[tag][idx] = amount
+
+    chart = pygal.Dot(
+        show_legend=False, x_label_rotation=30, style=LightColorizedStyle,
+        interpolate='hermite')
+    chart.title = 'Organization Properties Coverage by Area'
+    chart.x_labels = contribution_labels
+    for tag in contributions:
+        chart.add(
+            tag, contributions[tag], fill=False, allow_interruptions=True)
+
+    if export_format in ["html", "html5"]:
+        header_info["contributions_per_tag"] = chart.render(
+                disable_xml_declaration=True)
+    else:
+        header_info["contributions_per_tag"] = b64encode(
             cairosvg.svg2png(
                 bytestring=chart.render(), dpi=72)).decode("utf-8")
 
@@ -478,12 +546,12 @@ def add_contribution_model(journal: Journal, export_format: str):
     if not contributions:
         return
 
-    chart = pygal.HorizontalBar()
+    chart = pygal.Pie()
     chart.title = 'Organization Contributions Impact'
     for (contribution, impact) in contributions.items():
         value = 0
         if impact == "high":
-            value = 0.75
+            value = 1
         elif impact == "medium":
             value = 0.5
         if impact == "low":
