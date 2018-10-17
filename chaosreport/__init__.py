@@ -79,9 +79,9 @@ def generate_report_header(journal_paths: List[str],
     header_info["num_distinct_contributions"] = number_of_contributions
     header_info["tags"] = tags = set(tags)
 
-    ############################################################################
+    ###########################################################################
     # Distribution chart
-    ############################################################################
+    ###########################################################################
     dist_chart = pygal.Bar(
         print_values=True, print_values_position='top', show_legend=False,
         show_y_labels=False, legend_at_bottom=True)
@@ -103,9 +103,9 @@ def generate_report_header(journal_paths: List[str],
 
     contribution_labels = list(unique_contributions)
 
-    ############################################################################
+    ###########################################################################
     # Dot chart per experiment
-    ############################################################################
+    ###########################################################################
     contributions = {}
     for title in experiment_titles:
         contributions[title] = [None] * number_of_contributions
@@ -161,9 +161,9 @@ def generate_report_header(journal_paths: List[str],
             cairosvg.svg2png(
                 bytestring=chart.render(), dpi=72)).decode("utf-8")
 
-    ############################################################################
+    ###########################################################################
     # Dot chart per tag
-    ############################################################################
+    ###########################################################################
     contributions = {}
     for tag in tags:
         contributions[tag] = [None] * number_of_contributions
