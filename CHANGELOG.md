@@ -4,6 +4,13 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.10.0...HEAD
 
+### Changed
+
+-   the `dump` command from `vegeta` has been deprecated to `encode`
+    (their changelog doesn't mention from which version)
+-   the `report` command from `vegeta` has changed the name of its arguments
+    (their changelog doesn't mention from which version)
+
 ## [0.10.0][] - 2018-10-17
 
 [0.10.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.9.0...0.10.0

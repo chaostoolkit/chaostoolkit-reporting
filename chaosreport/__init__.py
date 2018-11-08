@@ -433,7 +433,7 @@ def generate_from_vegeta_result(run: Run, export_format: str):
             result_path))
         return
 
-    cmd = "{} report -inputs={} -reporter=text".format(
+    cmd = "{} report --type text {}".format(
         vegeta_path, result_path)
     try:
         proc = subprocess.run(
@@ -446,7 +446,7 @@ def generate_from_vegeta_result(run: Run, export_format: str):
     else:
         run["text"] = proc.stdout.decode('utf-8')
 
-    cmd = "{} dump -inputs={} -dumper=json".format(
+    cmd = "{} encode --to json {}".format(
         vegeta_path, result_path)
     try:
         proc = subprocess.run(
