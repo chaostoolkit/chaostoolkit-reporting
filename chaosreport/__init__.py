@@ -14,6 +14,7 @@ import tempfile
 from typing import List
 
 import cairosvg
+from chaoslib.caching import cache_activities, lookup_activity
 from chaoslib.types import Experiment, Journal, Run
 import dateparser
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -29,7 +30,7 @@ import semver
 
 __all__ = ["__version__", "generate_report", "generate_report_header",
            "save_report"]
-__version__ = '0.11.0'
+__version__ = '0.12.0'
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -221,12 +222,11 @@ def generate_report(journal_path: str, export_format: str = "markdown") -> str:
 
     # inject some pre-processed values into the journal for rendering
     experiment = journal["experiment"]
+    cache_activities(experiment)
     journal["chaoslib_version"] = journal["chaoslib-version"]
     journal["hypo"] = experiment.get("steady-state-hypothesis")
-    journal["num_probes"] = len(list(
-        filter(lambda a: a["type"] == "probe", experiment["method"])))
-    journal["num_actions"] = len(list(
-        filter(lambda a: a["type"] == "action", experiment["method"])))
+    journal["num_probes"] = count_activities(experiment, "probe")
+    journal["num_actions"] = count_activities(experiment, "action")
     journal["human_duration"] = str(timedelta(seconds=journal["duration"]))
     journal["export_format"] = export_format
     journal["today"] = datetime.now().strftime("%d %B %Y")
@@ -237,6 +237,19 @@ def generate_report(journal_path: str, export_format: str = "markdown") -> str:
     report = template.render(journal)
 
     return report
+
+
+def count_activities(experiment: Experiment, activity_type: str) -> int:
+    """
+    Count the number of activity by type in the experiment's method
+    """
+    count = 0
+    for activity in experiment["method"]:
+        if "ref" in activity:
+            activity = lookup_activity(activity["ref"])
+        if activity["type"] == activity_type:
+            count += 1
+    return count
 
 
 def save_report(header: str, reports: List[str], report_path: str,
@@ -290,6 +303,7 @@ def get_report_template(report_version: str,
 
     templates = sorted(templates, key=lambda vinfo: vinfo[0])
 
+    report_version = report_version.replace('rc1', '-rc1')
     for (vinfo, name) in templates:
         if semver.match(
             report_version, "<={v}".format(v=semver.format_version(

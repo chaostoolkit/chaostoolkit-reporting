@@ -2,7 +2,16 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.11.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.12.0...HEAD
+
+## [0.12.0][] - 2018-12-06
+
+[0.12.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.11.0...0.12.0
+
+### Changed
+
+-   Support `"ref"` to other activities
+-   Support versions that don't match semver specification such as `rc`
 
 ## [0.11.0][] - 2018-11-08
 
