@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.12.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.13.0...HEAD
+
+## [0.13.0][] - 2019-04-15
+
+[0.13.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.12.0...0.13.0
+
+### Changed
+
+-   Bumped to chaostoolkit 1.0
 
 ## [0.12.0][] - 2018-12-06
 
