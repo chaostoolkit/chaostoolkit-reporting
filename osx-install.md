@@ -32,3 +32,16 @@ Once the installer has completed, you should then be able to produce `.pdf` repo
   ```RuntimeError: Python is not installed as a framework. The Mac OS X backend will not be able to function correctly if Python is not installed as a framework.```
 
   In this case, run the following: `$ echo "backend: TkAgg" >> ~/.matplotlib/matplotlibrc`
+
+- If your terminal doesn't have the `LC_ALL` and `LANG` set, you may see the error:
+
+  ```ValueError: unknown locale: UTF-8```
+
+  In that case, configure the variables in your terminal configuration file. As example you can (use the definition that fits your workflow):
+
+  ```
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  ```
+
+  You will need to restart your terminal for your changes take effect.
