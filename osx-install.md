@@ -13,7 +13,7 @@ $ brew install cairo pandoc
 That's enough to produce HTML reports, but if you'd like to produce `.pdf` reports as well then you'll also need to install `latex` support. The best way to install that is to use Homebrew to grab `basictex`:
 
 ```
-$ brew cask install basictex
+$ brew install basictex
 ```
 
 Then use `ls /usr/local/Caskroom/basictex/` to see the actual directory the package resides in. Finally use the `open` command to run that Mac OS X package installer, for example:
