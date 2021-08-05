@@ -25,19 +25,16 @@ Install this package as any other Python packages:
 $ pip install -U chaostoolkit-reporting
 ```
 
-Notice that this draws a few [dependencies][deps] that will need to be installed:
+Notice that this draws a few [dependencies][deps]:
 
 [deps]: https://github.com/chaostoolkit/chaostoolkit-reporting/blob/master/requirements.txt
 
-```
-$ pip install -U -r requirements.txt
-```
-
 Some of them are LGPL v3 licensed.
 
-If you are using Mac OS X then you will need to [install some additional dependencies](osx-install.md) that the `chaos report` command relies upon.
+You will also need to [install some additional dependencies](uni-install.md) that the `chaos report` command relies upon.
 
-### Download a Docker Image
+
+## Download a Docker Image
 
 As the dependencies for this plugin can be difficult to get right, we also
 provide a docker image. Note that this image is rather big with 1.4Gb to
