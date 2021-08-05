@@ -25,28 +25,17 @@ Install this package as any other Python packages:
 $ pip install -U chaostoolkit-reporting
 ```
 
-Notice that this draws a few [dependencies][deps]:
+Notice that this draws a few [dependencies][deps] that will need to be installed:
 
 [deps]: https://github.com/chaostoolkit/chaostoolkit-reporting/blob/master/requirements.txt
+
+```
+$ pip install -U -r requirements.txt
+```
 
 Some of them are LGPL v3 licensed.
 
 If you are using Mac OS X then you will need to [install some additional dependencies](osx-install.md) that the `chaos report` command relies upon.
-
-You will also need to install the [pandoc][] package on your system.
-
-[pandoc]: https://pandoc.org/
-
-If you intend on creating PDF reports, the following additional packages will
-be needed:
-
-```
-$ sudo apt-get install texlive-latex-base \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
-    texlive-latex-extra \
-    pdflatex
-```
 
 ### Download a Docker Image
 
