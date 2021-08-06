@@ -34,16 +34,6 @@ Some of them are LGPL v3 licensed.
 You will also need to [install some additional dependencies](uni-install.md) that the `chaos report` command relies upon.
 
 
-## Download a Docker Image
-
-As the dependencies for this plugin can be difficult to get right, we also
-provide a docker image. Note that this image is rather big with 1.4Gb to
-pull.
-
-```console
-$ docker pull chaostoolkit/reporting
-```
-
 ## Usage
 
 Once installed, a new `report` subcommand will be made available to the
@@ -71,29 +61,53 @@ Or more succintly:
 $ chaos report --export-format=pdf journal-*.json report.pdf
 ```
 
-### Use a Docker container
+## Download a Docker Image
 
-To generate a PDF report using the Docker image:
+As the dependencies for this plugin can be difficult to get right, we also
+provide a docker image. Note that this image is rather big with 1.4Gb to
+pull.
 
 ```console
-$ ls .
-journal.json
+$ docker pull chaostoolkit/reporting
+```
 
+### Use a Docker container
+
+To generate a PDF report using the Docker image you must first ensure that you are running the command from where the `journal.json`
+file, generated during an experiment run, can be found. To check for this you can run:
+
+
+```console
+$ ls
+```
+
+And you should see the `journal.json` file:
+
+```
+journal.json
+```
+
+Now you can run the docker command:
+
+```console
 $ docker run \
     --user `id -u` \
     -v `pwd`:/tmp/result \
     -it \
     chaostoolkit/reporting
-
-$ ls .
-journal.json report.pdf chaostoolkit.log
 ```
 
-As you can see, you should run that command from where the `journal.json`
-file, generated during an experiment run, can be found. This will create a
-`report.pdf` in this directory.
+This will create `chaostoolkit.log` and `report.pdf` files in this directory.
 
-The file will be owned by the user id returned by the command `id -u`, it should
+```console
+$ ls
+```
+
+```
+chaostoolkit.log   journal.json   report.pdf
+```
+
+The `report.json` file will be owned by the user id returned by the command `id -u`, it should
 be your user. The reason we specify a user is that, by default, the container
 runs as root and the image doesn't make a guess about which user will run
 the container. If you don't have the `id` command you can set the value
@@ -117,8 +131,16 @@ $ docker run \
     -it \
     chaostoolkit/reporting -- report --export-format=html5 journal.json report.html
 
-$ ls .
-journal.json report.html chaostoolkit.log
+```
+
+And the same files will be created:
+
+```console
+$ ls
+```
+
+```
+chaostoolkit.log   journal.json   report.pdf
 ```
 
 ## Contribute
