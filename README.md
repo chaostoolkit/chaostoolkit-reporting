@@ -50,13 +50,13 @@ Once installed, a new `report` subcommand will be made available to the
 `chaos` command, use it as follows:
 
 ```
-$ chaos report --export-format=html5 chaos-report.json report.html
+$ chaos report --export-format=html5 journal.json report.html
 ```
 
 or, for a PDF document:
 
 ```
-$ chaos report --export-format=pdf chaos-report.json report.pdf
+$ chaos report --export-format=pdf journal.json report.pdf
 ```
 
 You can also generate a single report from many journals at once:
