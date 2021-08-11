@@ -21,7 +21,7 @@ PDF or HTML document.
 
 Install this package as any other Python packages:
 
-```
+```console
 $ pip install -U chaostoolkit-reporting
 ```
 
@@ -39,33 +39,35 @@ You will also need to [install some additional dependencies](uni-install.md) tha
 Once installed, a new `report` subcommand will be made available to the
 `chaos` command, use it as follows:
 
-```
+```console
 $ chaos report --export-format=html5 journal.json report.html
 ```
 
 or, for a PDF document:
 
-```
+```console
 $ chaos report --export-format=pdf journal.json report.pdf
 ```
 
 You can also generate a single report from many journals at once:
 
-```
+```console
 $ chaos report --export-format=pdf journal-1.json journal-2 journal-3 report.pdf
 ```
 
-Or more succintly:
+Or more succinctly:
 
-```
+```console
 $ chaos report --export-format=pdf journal-*.json report.pdf
 ```
 
 ## Download a Docker Image
 
 As the dependencies for this plugin can be difficult to get right, we also
-provide a docker image. Note that this image is rather big with 1.4Gb to
-pull.
+provide a docker image - note that this image is rather big with 1.4Gb to
+pull. You can install `Docker` from the [Docker Hub][dockerhub].
+
+[dockerhub]: https://hub.docker.com/search?q=&type=edition&offering=community
 
 ```console
 $ docker pull chaostoolkit/reporting
