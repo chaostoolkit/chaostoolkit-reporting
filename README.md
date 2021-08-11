@@ -73,14 +73,6 @@ pull. You can install `Docker` from the [Docker Hub][dockerhub].
 $ docker pull chaostoolkit/reporting
 ```
 
-If the following error message is received, you may have an invalid installation of `Docker`:
-
-```console
-Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
-```
-
-To resolve this, re-install `Docker` from the [Docker Hub][dockerhub], launch the application and grant it privileged access.
-
 ### Use a Docker container
 
 To generate a PDF report using the Docker image you must first ensure that you are running the command from where the `journal.json`
