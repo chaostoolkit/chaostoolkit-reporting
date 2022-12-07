@@ -2,13 +2,19 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.13.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.0...HEAD
+
+## [0.14.0][] - 2022-12-07
+
+[0.14.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.13.0...0.14.0
 
 ### Changed
 
 - Using `--embed-resources` instead of `--self-contained` as it's been
   [deprecated](https://pandoc.org/releases.html#pandoc-2.19-2022-08-03)
   in Pandoc 2.19
+- Only support Python 3.7+ now as the rest of the Chaos Toolkit
+- Move from TravisCI to GitHub actions
 
 ## [0.13.0][] - 2019-04-15
 
