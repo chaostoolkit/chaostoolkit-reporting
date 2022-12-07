@@ -3,3 +3,6 @@ pycodestyle
 pytest>=2.8
 pytest-cov
 pytest-sugar
+black
+flake8
+isort
