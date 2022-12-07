@@ -261,15 +261,24 @@ def save_report(header: str, reports: List[str], report_path: str,
             fp.write(report)
 
         fp.seek(0)
-        extra_args = [
-            "--self-contained",
+
+        extra_args = []
+
+        pandoc_version = pypandoc.get_pandoc_version()
+        major, minor, _ = pandoc_version.split(".", 2)
+        if major == 2 and minor < 19:
+            extra_args.append("--self-contained")
+        else:
+            extra_args.append("--embed-resources")
+
+        extra_args.extend([
             "--standalone",
             "--toc",
             "--highlight-style", "pygments",
             "--from", "markdown-markdown_in_html_blocks+raw_html",
             "--css", os.path.join(css_dir, "normalize.min.css"),
             "--css", os.path.join(css_dir, "main.css")
-        ]
+        ])
         pypandoc.convert_file(
             fp.name, to=export_format, format='md', outputfile=report_path,
             extra_args=extra_args)

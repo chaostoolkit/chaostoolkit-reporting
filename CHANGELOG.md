@@ -4,6 +4,12 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.13.0...HEAD
 
+### Changed
+
+- Using `--embed-resources` instead of `--self-contained` as it's been
+  [deprecated](https://pandoc.org/releases.html#pandoc-2.19-2022-08-03)
+  in Pandoc 2.19
+
 ## [0.13.0][] - 2019-04-15
 
 [0.13.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.12.0...0.13.0
