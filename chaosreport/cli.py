@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
-from glob import glob
 import os
+from glob import glob
 
 import click
-from logzero import logger
 
 from chaosreport import generate_report, generate_report_header, save_report
 
-__all__ = ["cli"]
+__all__ = ["report"]
 
 
 @click.command()
-@click.option('--export-format', default="markdown",
-              help='Format to export the report to: html, markdown, pdf.')
-@click.argument('journal', type=click.Path(exists=True), nargs=-1)
-@click.argument('report', type=click.Path(exists=False), nargs=1)
-def report(export_format: str = "markdown", journal: str = "journal.json",
-           report: str = "report.md"):
+@click.option(
+    "--export-format",
+    default="markdown",
+    help="Format to export the report to: html, markdown, pdf.",
+)
+@click.argument("journal", type=click.Path(exists=True), nargs=-1)
+@click.argument("report", type=click.Path(exists=False), nargs=1)
+def report(
+    export_format: str = "markdown",
+    journal: str = "journal.json",
+    report: str = "report.md",
+):
     """
     Generate a report from the run journal(s).
     """

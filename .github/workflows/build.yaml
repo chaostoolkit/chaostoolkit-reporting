@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
-    - name: Build the chaosreliably package
+    - name: Build the package
       run : |
         make build
 
@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         make install-dev
-    - name: Lint chaosreliably
+    - name: Lint
       run: |
         make lint
 
