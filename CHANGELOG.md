@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.1...HEAD
+
+## [0.14.1][] - 2022-12-08
+
+[0.14.1]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.0...0.14.1
+
+### Fixed
+
+- Compare numerics, not strings, for version comparison
 
 ## [0.14.0][] - 2022-12-07
 

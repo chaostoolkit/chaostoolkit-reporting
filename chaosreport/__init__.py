@@ -33,7 +33,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.14.0"
+__version__ = "0.14.1"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -304,7 +304,7 @@ def save_report(
 
         pandoc_version = pypandoc.get_pandoc_version()
         major, minor, _ = pandoc_version.split(".", 2)
-        if major == 2 and minor < 19:
+        if int(major) == 2 and int(minor) < 19:
             extra_args.append("--self-contained")
         else:
             extra_args.append("--embed-resources")
