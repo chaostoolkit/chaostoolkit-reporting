@@ -125,7 +125,7 @@ def generate_report_header(
         for title in experiment_titles:
             contributions[title] = [None] * number_of_contributions
 
-        for (title, level, contrib) in contributions_by_experiment:
+        for title, level, contrib in contributions_by_experiment:
             idx = contribution_labels.index(contrib)
             amount = 0
             if level == "high":
@@ -203,7 +203,7 @@ def generate_report_header(
         for tag in tags:
             contributions[tag] = [None] * number_of_contributions
 
-        for (tag, level, contrib) in contributions_by_tag:
+        for tag, level, contrib in contributions_by_tag:
             idx = contribution_labels.index(contrib)
             amount = 0
             if level == "high":
@@ -362,7 +362,7 @@ def get_report_template(
     templates = sorted(templates, key=lambda vinfo: vinfo[0])
 
     report_version = report_version.replace("rc1", "-rc1")
-    for (vinfo, name) in templates:
+    for vinfo, name in templates:
         if semver.match(
             report_version,
             "<={v}".format(v=semver.format_version(**vinfo._asdict())),
@@ -411,7 +411,6 @@ def generate_chart_from_prometheus(run: Run, export_format: str):
     if data:
         result_type = data.get("resultType")
         if result_type == "matrix":
-
             chart = pygal.Line(
                 x_label_rotation=20,
                 style=DefaultStyle,
@@ -657,7 +656,7 @@ def add_contribution_model(journal: Journal, export_format: str):
 
     chart = pygal.Pie()
     chart.title = "Organization Contributions Impact"
-    for (contribution, impact) in contributions.items():
+    for contribution, impact in contributions.items():
         value = 0
         if impact == "high":
             value = 1
