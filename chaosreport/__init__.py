@@ -33,7 +33,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.14.1"
+__version__ = "0.14.2"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)

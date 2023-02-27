@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.1...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.2...HEAD
+
+## [0.14.2][] - 2023-02-27
+
+[0.14.2]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.1...0.14.2
+
+### Fixed
+
+- Python miniaml version pattern as per https://github.com/pypa/packaging/issues/673
 
 ## [0.14.1][] - 2022-12-08
 
