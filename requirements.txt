@@ -10,3 +10,4 @@ natural
 pygal
 pypandoc
 semver
+importlib-metadata>=6.0
