@@ -2,7 +2,17 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.2...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.3...HEAD
+
+## [0.14.3][] - 2023-06-09
+
+[0.14.3]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.2...0.14.3
+
+### Fixed
+
+- Support for newer API change in `semver.VersionInfo` [#42][42]
+
+[#42]: https://github.com/chaostoolkit/chaostoolkit-reporting/issues/42
 
 ## [0.14.2][] - 2023-02-27
 

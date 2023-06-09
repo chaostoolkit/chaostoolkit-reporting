@@ -33,7 +33,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.14.2"
+__version__ = "0.14.3"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -363,9 +363,15 @@ def get_report_template(
 
     report_version = report_version.replace("rc1", "-rc1")
     for vinfo, name in templates:
+        # deal with change of API
+        try:
+            v_kwargs = vinfo._asdict()
+        except AttributeError:
+            v_kwargs = vinfo.to_dict()
+
         if semver.match(
             report_version,
-            "<={v}".format(v=semver.format_version(**vinfo._asdict())),
+            "<={v}".format(v=semver.format_version(**v_kwargs)),
         ):
             return env.get_template(name)
 
