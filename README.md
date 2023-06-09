@@ -1,6 +1,6 @@
-# chaostoolkit-reporting
+# A general purpose reporting generator for Chaos Toolkit
 
-[![Build Status](https://travis-ci.org/chaostoolkit/chaostoolkit-reporting.svg?branch=master)](https://travis-ci.org/chaostoolkit/chaostoolkit-reporting)
+[![Build, Test, and Lint](https://github.com/chaostoolkit/chaostoolkit-reporting/actions/workflows/build.yaml/badge.svg)](https://github.com/chaostoolkit/chaostoolkit-reporting/actions/workflows/build.yaml)
 
 The Chaos Toolkit reporting extension library.
 
@@ -9,7 +9,7 @@ The Chaos Toolkit reporting extension library.
 The purpose of this library is to provide reporting support to the
 [Chaos Toolkit][chaostoolkit] experiment results.
 
-[chaostoolkit]: http://chaostoolkit.org
+[chaostoolkit]: https://chaostoolkit.org
 
 ## Features
 
@@ -153,7 +153,7 @@ seeks [discussions][join] and continuous improvement.
 [join]: https://join.chaostoolkit.org/
 
 From a code perspective, if you wish to contribute, you will need to run a 
-Python 3.5+ environment. Then, fork this repository and submit a PR. The
+Python 3.7+ environment. Then, fork this repository and submit a PR. The
 project cares for code readability and checks the code style to match best
 practices defined in [PEP8][pep8]. Please also make sure you provide tests
 whenever you submit a PR so we keep the code reliable.
