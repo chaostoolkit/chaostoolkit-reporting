@@ -4,6 +4,12 @@
 
 [Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.3...HEAD
 
+### Added
+
+- Support to substitute values in arguments so we know how activities were
+  called. You can now pass `--var` and `--var-file` to generate the report
+  as you do when you run the experiment
+
 ## [0.14.3][] - 2023-06-09
 
 [0.14.3]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.14.2...0.14.3

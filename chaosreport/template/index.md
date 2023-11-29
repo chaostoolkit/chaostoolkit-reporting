@@ -117,7 +117,7 @@ The {{item.activity.type}} provider that was executed:
 | **Type**        | {{item.activity.provider.type}} |
 | **Path**        | {{item.activity.provider.path}} |
 | **Timeout**     | {{item.activity.provider.get("timeout", "N/A")}} | 
-| **Arguments**   | {{item.activity.provider.get("arguments", "N/A")}} | 
+| **Arguments**   | {{substitute(item.activity.provider.get("arguments", "N/A"))}} | 
 {% elif item.activity.provider.type == "http"  %}
 |                 |                                                            |
 | --------------- | ---------------------------------------------------------- |
@@ -125,14 +125,14 @@ The {{item.activity.type}} provider that was executed:
 | **URL**         | {{item.activity.provider.url}} |
 | **Method**      | {{item.activity.provider.get("method", "GET")}} | 
 | **Timeout**     | {{item.activity.provider.get("timeout", "N/A")}} | 
-| **Arguments**   | {{item.activity.provider.get("arguments", "N/A")}} | 
+| **Arguments**   | {{substitute(item.activity.provider.get("arguments", "N/A"))}} | 
 {% else %}
 |                 |                                                            |
 | --------------- | ---------------------------------------------------------- |
 | **Type**        | {{item.activity.provider.type}} |
 | **Module**      | {{item.activity.provider.module}} | 
 | **Function**    | {{item.activity.provider.func}} | 
-| **Arguments**   | {{item.activity.provider.get("arguments", "N/A")}} | 
+| **Arguments**   | {{substitute(item.activity.provider.get("arguments", "N/A"))}} | 
 {% endif %}
 
 {% if item.exception %}
