@@ -20,10 +20,8 @@ import maya
 import pygal
 import pypandoc
 import semver
-from chaoslib import merge_vars, substitute
+from chaoslib import substitute
 from chaoslib.caching import cache_activities, lookup_activity
-from chaoslib.configuration import load_configuration
-from chaoslib.secret import load_secrets
 from chaoslib.types import Configuration, Experiment, Journal, Run, Secrets
 from jinja2 import Environment, PackageLoader
 from logzero import logger
@@ -36,7 +34,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.15.0"
+__version__ = "0.16.0"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -248,10 +246,10 @@ def generate_report_header(
 
 
 def generate_report(
-    journal_path: str,
+    journal: Dict[str, Any],
     export_format: str = "markdown",
-    var: Dict[str, Any] = None,
-    var_file: List[str] = None,
+    config: Configuration = None,
+    secrets: Secrets = None,
 ) -> str:
     """
     Generate a report document from a chaostoolkit journal.
@@ -259,9 +257,6 @@ def generate_report(
     The report is first generated from the markdown template and converted to
     the desired format using Pandoc.
     """
-    with io.open(journal_path) as fp:
-        journal = json.load(fp)
-
     # inject some pre-processed values into the journal for rendering
     experiment = journal["experiment"]
     cache_activities(experiment)
@@ -275,11 +270,6 @@ def generate_report(
 
     generate_chart_from_metric_probes(journal, export_format)
     add_contribution_model(journal, export_format)
-    config_vars, secret_vars = merge_vars(var, var_file) or (None, None)
-    config = load_configuration(
-        experiment.get("configuration", {}), config_vars
-    )
-    secrets = load_secrets(experiment.get("secrets", {}), secret_vars)
     template = get_report_template(
         journal["chaoslib-version"], configuration=config, secrets=secrets
     )
@@ -364,13 +354,23 @@ def get_report_template(
     env.globals["pretty_duration"] = lambda d0, d1: date.delta(
         dateparser.parse(d0), dateparser.parse(d1), words=False
     )[0]
-    env.globals["substitute"] = (
-        lambda args: {
-            k: substitute(v, configuration, secrets) for k, v in args.items()
-        }
-        if isinstance(args, dict)
-        else args
-    )
+
+    def substitution(args, is_tolerance: bool = False) -> Any:
+        if is_tolerance:
+            if isinstance(args, dict):
+                if args.get("type") == "probe":
+                    args = args.get("provider", {}).get("arguments")
+                    args.pop("value", None)
+
+        if isinstance(args, dict):
+            return {
+                k: substitute(v, configuration, secrets)
+                for k, v in args.items()
+            }
+
+        return substitute(args, configuration, secrets)
+
+    env.globals["substitute"] = substitution
 
     if not report_version:
         return env.get_template(default_template)

@@ -68,7 +68,7 @@ The steady state was {%if steady_states.before.steady_state_met %} verified {% e
 
 |  Probe                                                         |  Tolerance                  | Verified |
 | -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.before.probes %}
-| {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
+| {{probe.activity.name}}     | {{substitute(probe.activity.tolerance, True)}}         | {{probe.tolerance_met}} | {% endfor %}
 
 ##### After Run
 
@@ -76,7 +76,7 @@ The steady state was {%if steady_states.after.steady_state_met %} verified {% el
 
 |  Probe                                                         |  Tolerance                  | Verified |
 | -------------------------------------------------------------- | --------------------------- | ------ | {% for probe in steady_states.after.probes %}
-| {{probe.activity.name}}     | {{probe.activity.tolerance}}         | {{probe.tolerance_met}} | {% endfor %}
+| {{probe.activity.name}}     | {{substitute(probe.activity.tolerance, True)}}         | {{probe.tolerance_met}} | {% endfor %}
 
 {% endif %}
 
@@ -106,8 +106,8 @@ The experiment was conducted on {{start|pretty_date}} and lasted roughly
 | **Started**           | {{item.start | pretty_date}} | 
 | **Ended**             | {{item.end | pretty_date}} |
 | **Duration**          | {{pretty_duration(item.start, item.end)}} | {% if item.activity.get("pauses", {}).get("before") %}
-| **Paused Before**     | {{item.activity.pauses.before}}s | {% endif %} {% if item.activity.get("pauses", {}).get("after") %}
-| **Paused After**      | {{item.activity.pauses.after}}s | {% endif %}
+| **Paused Before**     | {{substitute(item.activity.pauses.before)}}s | {% endif %} {% if item.activity.get("pauses", {}).get("after") %}
+| **Paused After**      | {{substitute(item.activity.pauses.after)}}s | {% endif %}
 
 The {{item.activity.type}} provider that was executed:
 

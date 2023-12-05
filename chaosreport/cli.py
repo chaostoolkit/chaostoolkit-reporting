@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import io
+import json
 import os
 from glob import glob
 from typing import Any, Dict, List
 
 import click
-from chaoslib import convert_vars
+from chaoslib import convert_vars, merge_vars
+from chaoslib.configuration import load_configuration
+from chaoslib.secret import load_secrets
 
 from chaosreport import generate_report, generate_report_header, save_report
 
@@ -70,7 +74,18 @@ def report(
     if len(journal) == 1 and not os.path.isfile(journal[0]):
         journal = glob(journal)
 
-    for journal in journal:
-        reports.append(generate_report(journal, export_format, var, var_file))
+    for journal_path in journal:
+        with io.open(journal_path) as fp:
+            j = json.load(fp)
+
+        experiment = j["experiment"]
+        config_vars, secret_vars = merge_vars(var, var_file) or (None, None)
+        config = load_configuration(
+            experiment.get("configuration", {}), config_vars
+        )
+        secrets = load_secrets(experiment.get("secrets", {}), secret_vars)
+
+        reports.append(generate_report(j, export_format, config, secrets))
+
     save_report(header, reports, report_path, export_format)
     click.echo("Report generated as '{f}'".format(f=report))

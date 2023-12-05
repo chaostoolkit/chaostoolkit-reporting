@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.15.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.16.0...HEAD
+
+## [0.16.0][] - 2023-12-05
+
+[0.16.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.15.0...0.16.0
+
+### Added
+
+- Extended support for substituoon to tolerance and pauses properties
 
 ## [0.15.0][] - 2023-11-30
 
