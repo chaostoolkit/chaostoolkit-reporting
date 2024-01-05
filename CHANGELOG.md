@@ -2,7 +2,16 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.16.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.0...HEAD
+
+## [0.17.0][] - 2024-01-05
+
+[0.17.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.16.0...0.17.0
+
+### Added
+
+- The `--title` option to the `report` command so you can force the title
+  in the report header
 
 ## [0.16.0][] - 2023-12-05
 

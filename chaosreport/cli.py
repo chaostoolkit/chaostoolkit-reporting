@@ -30,6 +30,10 @@ def validate_vars(
 
 @click.command()
 @click.option(
+    "--title",
+    help="Title to use in the header of the report",
+)
+@click.option(
     "--export-format",
     default="markdown",
     help="Format to export the report to: html, markdown, pdf.",
@@ -63,11 +67,12 @@ def report(
     var_file: List[str] = None,
     journal: str = "journal.json",
     report: str = "report.md",
+    title: str = None,
 ):
     """
     Generate a report from the run journal(s).
     """
-    header = generate_report_header(journal, export_format)
+    header = generate_report_header(journal, export_format, title)
     report_path = report
     reports = []
 

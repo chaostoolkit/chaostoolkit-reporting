@@ -34,7 +34,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.16.0"
+__version__ = "0.17.0"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -43,12 +43,14 @@ js_dir = os.path.join(basedir, "template", "js")
 
 
 def generate_report_header(
-    journal_paths: List[str], export_format: str = "markdown"
+    journal_paths: List[str],
+    export_format: str = "markdown",
+    title: str = None,
 ) -> str:
     header_template = get_report_template(None, "header.md")
 
     header_info = {}
-    header_info["title"] = "Chaos Engineering Report"
+    header_info["title"] = "Chaos Engineering Report" or title
     header_info["today"] = datetime.now().strftime("%d %B %Y")
     header_info["export_format"] = export_format
     tags = []
