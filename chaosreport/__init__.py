@@ -34,7 +34,7 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.17.0"
+__version__ = "0.17.1"
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -50,7 +50,7 @@ def generate_report_header(
     header_template = get_report_template(None, "header.md")
 
     header_info = {}
-    header_info["title"] = "Chaos Engineering Report" or title
+    header_info["title"] = title or "Chaos Engineering Report"
     header_info["today"] = datetime.now().strftime("%d %B %Y")
     header_info["export_format"] = export_format
     tags = []

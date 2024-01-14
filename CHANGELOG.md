@@ -2,7 +2,16 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.0...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.1...HEAD
+
+## [0.17.1][] - 2024-01-14
+
+[0.17.1]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.0...0.17.1
+
+### Fixed
+
+- Ensure `--title` takes precedence when set. Thanks to @mcastellin for
+  investigating
 
 ## [0.17.0][] - 2024-01-05
 
