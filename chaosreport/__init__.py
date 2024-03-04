@@ -9,7 +9,8 @@ import shutil
 import subprocess
 import tempfile
 from base64 import b64encode
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from functools import partial
 from typing import Any, Dict, List
 
 import cairosvg
@@ -464,7 +465,7 @@ def generate_chart_from_prometheus(run: Run, export_format: str):
             # now we have our range of abscissa, let's map those
             # timestamps to formatted strings
             x = sorted(list(x))
-            fromts = datetime.utcfromtimestamp
+            fromts = partial(datetime.fromtimestamp, tz=timezone.utc)
             chart.x_labels = [
                 fromts(v).strftime("%Y-%m-%d\n %H:%M:%S") for v in x
             ]
