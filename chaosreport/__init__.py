@@ -310,7 +310,7 @@ def save_report(
         extra_args = []
 
         pandoc_version = pypandoc.get_pandoc_version()
-        major, minor, _ = pandoc_version.split(".", 2)
+        major, minor = pandoc_version.split(".")[0:2]
         if int(major) == 2 and int(minor) < 19:
             extra_args.append("--self-contained")
         else:
