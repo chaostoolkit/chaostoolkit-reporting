@@ -2,6 +2,7 @@
 import io
 import itertools
 import json
+import logging
 import os
 import os.path
 import shlex
@@ -10,6 +11,7 @@ import subprocess
 import tempfile
 from base64 import b64encode
 from datetime import datetime, timedelta
+from importlib.metadata import version, PackageNotFoundError
 from typing import Any, Dict, List
 
 import cairosvg
@@ -24,7 +26,6 @@ from chaoslib import substitute
 from chaoslib.caching import cache_activities, lookup_activity
 from chaoslib.types import Configuration, Experiment, Journal, Run, Secrets
 from jinja2 import Environment, PackageLoader
-from logzero import logger
 from natural import date
 from pygal.style import DefaultStyle, LightColorizedStyle
 
@@ -34,7 +35,12 @@ __all__ = [
     "generate_report_header",
     "save_report",
 ]
-__version__ = "0.17.2"
+try:
+    __version__ = version("chaostoolkit-reporting")
+except PackageNotFoundError:
+    __version__ = "unknown"
+
+logger = logging.getLogger("chaostoolkit")
 
 curdir = os.getcwd()
 basedir = os.path.dirname(__file__)
@@ -664,9 +670,7 @@ def generate_from_vegeta_result(run: Run, export_format: str):
                 run["charts"] = []
 
             if export_format in ["html", "html5"]:
-                run["charts"].append(
-                    chart.render(disable_xml_declaration=True)
-                )  # noqa
+                run["charts"].append(chart.render(disable_xml_declaration=True))  # noqa
             else:
                 run["charts"].append(
                     b64encode(

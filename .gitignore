@@ -115,3 +115,7 @@ junit-test-results.xml
 
 journal*.json
 report.*
+.ruff_cache/
+.pytest_cache/
+.pdm-build/
+.pdm-python

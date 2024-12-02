@@ -2,7 +2,16 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.2...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.18.0...HEAD
+
+## [0.18.0][] - 2024-12-02
+
+[0.18.0]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.2...0.18.0
+
+### Changed
+
+- Refactor the build toolchain to use PDM instead of pip
+- Requires now Python 3.10 at minimum due to numpy undirect dependency
 
 ## [0.17.2][] - 2024-12-02
 

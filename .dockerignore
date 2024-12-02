@@ -1,2 +1,5 @@
 *
-!requirements.txt
+!py12-linux.lock
+!pyproject.toml
+!README.md
+!chaosreport

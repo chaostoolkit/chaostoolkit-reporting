@@ -1,4 +1,4 @@
-name: Build, Test, and Lint
+name: Build
 
 on:
   push:
@@ -8,31 +8,36 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        os: ["ubuntu-24.04", "macos-latest"]
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.7'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-    - name: Build the package
-      run : |
-        make build
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  lint:
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.7'
-    - name: Install dependencies
-      run: |
-        make install-dev
-    - name: Lint
-      run: |
-        make lint
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
+          prerelease: true
+
+      - name: Ensure lock file is up to date
+        run: |
+          pdm lock --check
+          pdm lock --lockfile py12-linux.lock --check
+
+      - name: Install dependencies
+        run: |
+          pdm sync -d
+
+      - name: Run Lint
+        run: |
+          pdm run lint
+
+      - name: Run Tests
+        run: |
+          pdm run test
