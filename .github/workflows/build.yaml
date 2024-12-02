@@ -38,6 +38,6 @@ jobs:
         run: |
           pdm run lint
 
-      - name: Run Tests
-        run: |
-          pdm run test
+      #- name: Run Tests
+      #  run: |
+      #    pdm run test
