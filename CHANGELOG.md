@@ -2,7 +2,15 @@
 
 ## [Unreleased][]
 
-[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.1...HEAD
+[Unreleased]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.2...HEAD
+
+## [0.17.2][] - 2024-12-02
+
+[0.17.2]: https://github.com/chaostoolkit/chaostoolkit-reporting/compare/0.17.1...0.17.2
+
+### Fixed
+
+- Parsing of the pandoc version
 
 ## [0.17.1][] - 2024-01-14
 
